@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo アプリ</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="/stylesheets/ex.css">
+</head>
+<body ng-app="App">
+  <div class="container" ng-controller="MainController">
+    <!-- フォーム -->
+    <form ng-submit="addTodo()" ng-controller="RegisterController">
+      <input type="text" required placeholder="新しい要件を入力" ng-model="newTitle">
+      <button type="submit">追加</button>
+    </form>
+
+    <div ng-controller="ToolbarController">
+      <button ng-click="checkAll()">全て完了/未了</button>
+      <button class="active" ng-click="changeFilter()" ng-class="{active: !currentFilter}">
+        全部 <span>{{ allCount }}</span>
+      </button>
+      <button ng-click="changeFilter(filter.remaining)" ng-class="{active: currentFilter == filter.remaining}">
+        未了 <span>{{ remainingCount }}</span>
+      </button>
+      <button  ng-click="changeFilter(filter.done)" ng-class="{active: currentFilter == filter.done}">
+        完了 <span>{{ doneCount }}</span>
+      </button>
+      <button ng-click="removeDoneTodo()">完了アイテムを全て削除</button>
+    </div>
+
+    <ul ng-controller="TodoListController">
+      <li class="todo-item" ng-repeat="todo in todoList | filter:currentFilter"
+        ng-class="{done: todo.done, editing: todo == editing}">
+        <form ng-submit="doneEdit()" name="todoForm">
+          <input type="checkbox" ng-model="todo.done">
+          <span class="todo-title" ng-dblclick="editTodo(todo)">{{ todo.title }}
+            <input type="text" required ng-model="todo.title"
+              ng-show="todo == editing" my-select="todo == editing" ng-blur="doneEdit(todoForm)">
+            <button type="reset" ng-if="todo != editing" ng-click="removeTodo(todo)">削除</button>
+          </span>
+        </form>
+      </li>
+    </ul>
+
+  </div>
+  <script src="/js/angular.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
